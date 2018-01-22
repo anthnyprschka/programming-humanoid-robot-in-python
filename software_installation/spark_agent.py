@@ -164,8 +164,8 @@ class Perception:
                 self.gps[s[1][1]] = [float(v) for v in s[2][1:]]
             elif name == BAT_PERCEPTOR:
                 self.bat = float(s[1])
-            else:
-                raise RuntimeError('unknown perception: ' + str(s))
+            # else:
+            #     raise RuntimeError('unknown perception: ' + str(s))
 
         if 'torso' in self.gps:
             data = self.gps['torso']

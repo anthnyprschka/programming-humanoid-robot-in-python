@@ -2,7 +2,7 @@
 
 * Tasks:
     1. complete the code in `AngleInterpolationAgent.angle_interpolation`,
-       you are free to use splines interploation or Bezier interploation,
+       you are free to use splines interpolation or Bezier interploation,
        but the keyframes provided are for Bezier curves, you can simply ignore some data for splines interploation,
        please refer data format below for details.
     2. try different keyframes from `keyframes` folder
@@ -30,7 +30,8 @@ class AngleInterpolationAgent(PIDAgent):
                  teamname='DAInamite',
                  player_id=0,
                  sync_mode=True):
-        super(AngleInterpolationAgent, self).__init__(simspark_ip, simspark_port, teamname, player_id, sync_mode)
+        super(AngleInterpolationAgent, self).__init__(simspark_ip, simspark_port,
+            teamname, player_id, sync_mode)
         self.keyframes = ([], [], [])
 
     def think(self, perception):

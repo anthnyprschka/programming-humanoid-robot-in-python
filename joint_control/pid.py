@@ -12,10 +12,16 @@
 # add PYTHONPATH
 import os
 import sys
-sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'software_installation'))
+sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+    '..', 'software_installation'))
 
+# Classic numpy
 import numpy as np
+
+# Importing deque
 from collections import deque
+
+# Importing both SparkAgent and JOING_CMD_NAMES
 from spark_agent import SparkAgent, JOINT_CMD_NAMES
 
 
@@ -58,32 +64,58 @@ class PIDController(object):
 
 
 class PIDAgent(SparkAgent):
+
+    # Note that when instantiating this agent I need to pass all the low level args
     def __init__(self, simspark_ip='localhost',
                  simspark_port=3100,
                  teamname='DAInamite',
                  player_id=0,
                  sync_mode=True):
-        super(PIDAgent, self).__init__(simspark_ip, simspark_port, teamname, player_id, sync_mode)
+
+        # Instantiating this agent calls SparkAgent's __init__ function
+        super(PIDAgent, self).__init__(simspark_ip, simspark_port,
+            teamname, player_id, sync_mode)
+
+        # Getting the names of the joints
         self.joint_names = JOINT_CMD_NAMES.keys()
+
+        # Getting the number of joints (used right below)
         number_of_joints = len(self.joint_names)
+
+        # Here I am instantiating a PIDController, defined above
         self.joint_controller = PIDController(dt=0.01, size=number_of_joints)
+
+        # Setting all target joints to 0
         self.target_joints = {k: 0 for k in self.joint_names}
 
+
+    # Enhance SparkAgent.think() method
     def think(self, perception):
+
+        # What is SparkAgent.think method doing?
         action = super(PIDAgent, self).think(perception)
-        '''calculate control vector (speeds) from
-        perception.joint:   current joints' positions (dict: joint_id -> position (current))
-        self.target_joints: target positions (dict: joint_id -> position (target)) '''
+
+        # calculate control vector (speeds) from perception.joint, self.target_joints
         joint_angles = np.asarray(
             [perception.joint[joint_id]  for joint_id in JOINT_CMD_NAMES])
-        target_angles = np.asarray([self.target_joints.get(joint_id, 
+        target_angles = np.asarray([self.target_joints.get(joint_id,
             perception.joint[joint_id]) for joint_id in JOINT_CMD_NAMES])
+
+        # Here, PIDController.control() method is called to determine this timestep's actions
         u = self.joint_controller.control(target_angles, joint_angles)
+
+        # Prepare for return
         action.speed = dict(zip(JOINT_CMD_NAMES.iterkeys(), u))  # dict: joint_id -> speed
         return action
 
 
 if __name__ == '__main__':
+
+    # Instantiating a PIDAgent (that is a child of SparkAgent)
     agent = PIDAgent()
+
+    # Why are we setting this to 1.0? All others are 0.0
     agent.target_joints['HeadYaw'] = 1.0
+
+    # Running the agent
     agent.run()

@@ -150,7 +150,8 @@ class Perception:
                     jointv[i[0]] = i[1]
                 name = JOINT_SENSOR_NAMES[jointv['n']]
                 if 'ax' in jointv:
-                    self.joint[name] = float(jointv['ax']) * DEG_TO_RAD * (-1 if name in INVERSED_JOINTS else 1)
+                    self.joint[name] = float(jointv['ax']) * DEG_TO_RAD * \
+                        (-1 if name in INVERSED_JOINTS else 1)
                 if 'tp' in jointv:
                     self.joint_temperature[name] = float(jointv['tp'])
             elif name == VISION_PERCEPTOR or name == TOP_CAMERA:
@@ -164,6 +165,11 @@ class Perception:
                 self.gps[s[1][1]] = [float(v) for v in s[2][1:]]
             elif name == BAT_PERCEPTOR:
                 self.bat = float(s[1])
+
+
+            elif name == 'R':
+              print s
+
             # else:
             #     raise RuntimeError('unknown perception: ' + str(s))
 
@@ -193,13 +199,17 @@ class Perception:
 
 
 class Action(object):
-    def __init__(self):
+    def __init__(self, perception):
         self.stiffness = {}
         self.speed = {}
 
     def to_commands(self):
-        speed = ['(%s %.2f)' % (JOINT_CMD_NAMES[k], v * (-1 if k in INVERSED_JOINTS else 1)) for k, v in self.speed.iteritems()]
-        stiffness = ['(%ss %.2f)' % (JOINT_CMD_NAMES[k], v) for k, v in self.stiffness.iteritems()]
+        speed = ['(%s %.2f)' % (JOINT_CMD_NAMES[k], v * (-1 if k in INVERSED_JOINTS else 1)) \
+            for k, v in self.speed.iteritems()]
+
+        stiffness = ['(%ss %.2f)' % (JOINT_CMD_NAMES[k], v) \
+            for k, v in self.stiffness.iteritems()]
+
         return ''.join(speed + stiffness)
 
 
@@ -253,7 +263,7 @@ class SparkAgent(object):
         return self.perception
 
     def think(self, perception):
-        action = Action()
+        action = Action(perception)
         return action
 
     def sense_think_act(self):

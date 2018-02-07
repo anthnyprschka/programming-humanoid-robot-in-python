@@ -248,7 +248,8 @@ class SparkAgent(object):
 
     def act(self, action):
         # commands = action.to_commands()
-        commands = action.beam_command()
+        # commands = action.beam_command()
+        commands = '(say hi)'
         self.send_command(commands)
 
     def send_command(self, commands):

@@ -203,8 +203,8 @@ class Action(object):
         self.speed = {}
         self.stiffness = {}
 
-        self.beam_x = 10.0
-        self.beam_y = -10.0
+        self.beam_x = 0.0
+        self.beam_y = 0.0
         self.beam_rot = 0.0
 
     def to_commands(self):
@@ -217,8 +217,8 @@ class Action(object):
         return ''.join(speed + stiffness)
 
     def beam_command(self):
-        self.beam_x += 1.0
-        self.beam_y += -1.0
+        self.beam_x += 0.1
+        # self.beam_y += -1.0
         return '(beam {:.2f} {:.2f} {:.2f})'\
             .format(self.beam_x, self.beam_y, self.beam_rot)
 
@@ -248,8 +248,8 @@ class SparkAgent(object):
 
     def act(self, action):
         # commands = action.to_commands()
-        # commands = action.beam_command()
-        commands = '(say hi)'
+        commands = action.beam_command()
+        # commands = '(say hi)'
         print 'works'
         self.send_command(commands)
 

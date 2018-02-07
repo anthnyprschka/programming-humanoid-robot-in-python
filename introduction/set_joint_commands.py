@@ -20,9 +20,17 @@ from spark_agent import SparkAgent, Action
 class MyAgent(SparkAgent):
     def think(self, perception):
         action = super(MyAgent, self).think(perception)
-        action.stiffness = {'laj1': 0.0}
-        action.speed = {'hj1': 0.1}
+
+        # action.stiffness = {
+        #     'laj1': 0.0,
+        # }
+
+        # action.speed = {
+        #     'hj1': 0.1,
+        # }
+
         return action
+
 
 if '__main__' == __name__:
     agent = MyAgent()

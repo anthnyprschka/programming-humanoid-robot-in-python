@@ -200,8 +200,12 @@ class Perception:
 
 class Action(object):
     def __init__(self, perception):
-        self.stiffness = {}
         self.speed = {}
+        self.stiffness = {}
+
+        self.beam_x = 10.0
+        self.beam_y = -10.0
+        self.beam_rot = 0.0
 
     def to_commands(self):
         speed = ['(%s %.2f)' % (JOINT_CMD_NAMES[k], v * (-1 if k in INVERSED_JOINTS else 1)) \
@@ -211,6 +215,10 @@ class Action(object):
             for k, v in self.stiffness.iteritems()]
 
         return ''.join(speed + stiffness)
+
+    def beam_command(self):
+        return '(beam {.2f} {.2f} {.2f})'\
+            .format(self.beam_x, self.beam_y, self.beam_rot)
 
 
 class SparkAgent(object):
@@ -237,7 +245,8 @@ class SparkAgent(object):
         self.player_id = player_id
 
     def act(self, action):
-        commands = action.to_commands()
+        # commands = action.to_commands()
+        commands = action.beam_command()
         self.send_command(commands)
 
     def send_command(self, commands):

@@ -217,6 +217,8 @@ class Action(object):
         return ''.join(speed + stiffness)
 
     def beam_command(self):
+        self.beam_x += 1.0
+        self.beam_y += -1.0
         return '(beam {:.2f} {:.2f} {:.2f})'\
             .format(self.beam_x, self.beam_y, self.beam_rot)
 

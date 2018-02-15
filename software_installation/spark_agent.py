@@ -203,11 +203,13 @@ class Action(object):
         self.speed = {}
         self.stiffness = {}
 
-        self.beam_x = 0.0
-        self.beam_y = 0.0
-        self.beam_rot = 0.0
+        # self.reset_x = 0.0
+        # self.reset_y = 0.0
+        # self.reset_rot = 0.0
 
-    def to_commands(self):
+        self.counter = 0
+
+    def create_commands(self):
         speed = ['(%s %.2f)' % (JOINT_CMD_NAMES[k], v * (-1 if k in INVERSED_JOINTS else 1)) \
             for k, v in self.speed.iteritems()]
 
@@ -216,11 +218,16 @@ class Action(object):
 
         return ''.join(speed + stiffness)
 
-    def beam_command(self):
-        self.beam_x += 0.1
-        # self.beam_y += -1.0
-        return '(beam {:.2f} {:.2f} {:.2f})'\
-            .format(self.beam_x, self.beam_y, self.beam_rot)
+    def create_reset_command(self):
+        self.counter += 1
+        # self.reset_x += 0.1
+        # self.reset_y += -1.0
+        if self.counter % 6 < 3:
+          return '(reset {:.2f} {:.2f} {:.2f})'\
+              .format(0.0, 0.0, 0.0)
+        else:
+          return '(reset {:.2f} {:.2f} {:.2f})'\
+              .format(1.0, 1.0, 1.0)
 
 
 class SparkAgent(object):
@@ -247,10 +254,10 @@ class SparkAgent(object):
         self.player_id = player_id
 
     def act(self, action):
-        # commands = action.to_commands()
-        commands = action.beam_command()
+        # commands = action.create_commands()
         # commands = '(say hi)'
-        print 'works'
+        commands = action.create_reset_command()
+        print commands
         self.send_command(commands)
 
     def send_command(self, commands):

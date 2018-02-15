@@ -222,7 +222,7 @@ class Action(object):
         print 'counter', counter
         # self.reset_x += 0.1
         # self.reset_y += -1.0
-        if self.counter % 6 < 3:
+        if counter % 6 < 3:
           return '(reset {:.2f} {:.2f} {:.2f})'\
               .format(0.0, 0.0, 0.0)
         else:

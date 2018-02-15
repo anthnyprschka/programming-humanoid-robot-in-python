@@ -220,6 +220,7 @@ class Action(object):
 
     def create_reset_command(self):
         self.counter += 1
+        print 'self.counter', self.counter
         # self.reset_x += 0.1
         # self.reset_y += -1.0
         if self.counter % 6 < 3:

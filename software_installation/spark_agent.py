@@ -218,9 +218,8 @@ class Action(object):
 
         return ''.join(speed + stiffness)
 
-    def create_reset_command(self):
-        self.counter += 1
-        print 'self.counter', self.counter
+    def create_reset_command(self, counter):
+        print 'counter', counter
         # self.reset_x += 0.1
         # self.reset_y += -1.0
         if self.counter % 6 < 3:
@@ -254,10 +253,13 @@ class SparkAgent(object):
             player_id = self.perception.game_state.unum
         self.player_id = player_id
 
+        self.counter = 0
+
     def act(self, action):
         # commands = action.create_commands()
         # commands = '(say hi)'
-        commands = action.create_reset_command()
+        self.counter += 1
+        commands = action.create_reset_command(self.counter)
         print commands
         self.send_command(commands)
 
